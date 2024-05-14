@@ -4,7 +4,9 @@
       <div class="q-mb-xl">
         <q-input v-model="tempData.name" label="姓名" />
         <q-input v-model="tempData.age" type="number" min="0" label="年齡" />
-        <q-btn color="primary" class="q-mt-md" @click="add">新增</q-btn>
+        <q-btn color="primary" class="q-mt-md" @click="add">{{
+          returnButtonName()
+        }}</q-btn>
       </div>
 
       <q-table
@@ -119,6 +121,7 @@ const tableButtons = ref([
   },
 ]);
 
+const tempDataId = ref('');
 const tempData = ref({
   name: '',
   age: '',
@@ -133,12 +136,39 @@ const getData = () => {
 };
 const add = () => {
   if (tempData.value.name === '' || tempData.value.age === '') return;
-  axios
-    .post('https://dahua.metcfire.com.tw/api/CRUDTest', tempData.value)
-    .then((response) => {
-      console.log(response);
-      getData();
-    });
+  if (tempDataId.value === '') {
+    axios
+      .post('https://dahua.metcfire.com.tw/api/CRUDTest', tempData.value)
+      .then((response) => {
+        console.log(response);
+        tempDataId.value = '';
+        tempData.value.name = '';
+        tempData.value.age = '';
+        getData();
+      });
+  } else {
+    let patchData = {
+      id: tempDataId.value,
+      name: tempData.value.name,
+      age: parseInt(tempData.value.age),
+    };
+    axios
+      .patch('https://dahua.metcfire.com.tw/api/CRUDTest', patchData)
+      .then((response) => {
+        console.log(response.data);
+        tempDataId.value = '';
+        tempData.value.name = '';
+        tempData.value.age = '';
+        getData();
+      });
+  }
+};
+const returnButtonName = () => {
+  if (tempDataId.value === '') {
+    return '新增';
+  } else {
+    return '更新';
+  }
 };
 function handleClickOption(btn, data) {
   if (btn === tableButtons.value[1]) {
@@ -149,21 +179,24 @@ function handleClickOption(btn, data) {
         getData();
       });
   } else if (btn === tableButtons.value[0]) {
-    if (tempData.value.name === '' || tempData.value.age === '') return;
-    let patchData = {
-      id: data.id,
-      name: tempData.value.name,
-      age: parseInt(tempData.value.age),
-    };
-    axios
-      .patch('https://dahua.metcfire.com.tw/api/CRUDTest', patchData)
-      .then((response) => {
-        console.log(response.data);
-        getData();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    tempDataId.value = data.id;
+    tempData.value.name = data.name;
+    tempData.value.age = data.age;
+    // if (tempData.value.name === '' || tempData.value.age === '') return;
+    // let patchData = {
+    //   id: data.id,
+    //   name: tempData.value.name,
+    //   age: parseInt(tempData.value.age),
+    // };
+    // axios
+    //   .patch('https://dahua.metcfire.com.tw/api/CRUDTest', patchData)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     getData();
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   }
 }
 </script>
