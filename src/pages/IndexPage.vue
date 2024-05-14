@@ -91,7 +91,9 @@
         <div style="font-size: 36px">提示</div>
         <div style="font-size: 25px">是否確定刪除資料</div>
         <div style="display: flex; justify-content: right; width: 300px">
-          <button style="margin-right: 20px" @click="cancel">取消</button>
+          <button style="margin-right: 20px" @click="resetTempDataDeleteId">
+            取消
+          </button>
           <button @click="confirm">確定</button>
         </div>
       </div>
@@ -192,7 +194,7 @@ const returnButtonName = () => {
     return '更新';
   }
 };
-const cancel = () => {
+const resetTempDataDeleteId = () => {
   tempDataDeleteId.value = '';
 };
 const confirm = () => {
@@ -202,7 +204,7 @@ const confirm = () => {
     )
     .then((response) => {
       console.log(response.data);
-      tempDataDeleteId.value = '';
+      resetTempDataDeleteId();
       getData();
     });
 };
