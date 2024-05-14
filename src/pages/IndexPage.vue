@@ -3,7 +3,7 @@
     <div class="full-width q-px-xl">
       <div class="q-mb-xl">
         <q-input v-model="tempData.name" label="姓名" />
-        <q-input v-model="tempData.age" label="年齡" />
+        <q-input v-model="tempData.age" type="number" min="0" label="年齡" />
         <q-btn color="primary" class="q-mt-md" @click="add">新增</q-btn>
       </div>
 
@@ -132,6 +132,7 @@ const getData = () => {
   });
 };
 const add = () => {
+  if (tempData.value.name === '' || tempData.value.age === '') return;
   axios
     .post('https://dahua.metcfire.com.tw/api/CRUDTest', tempData.value)
     .then((response) => {
@@ -140,8 +141,6 @@ const add = () => {
     });
 };
 function handleClickOption(btn, data) {
-  // ...
-  console.log(btn, data);
   if (btn === tableButtons.value[1]) {
     axios
       .delete(`https://dahua.metcfire.com.tw/api/CRUDTest/${data.id}`)
@@ -150,6 +149,7 @@ function handleClickOption(btn, data) {
         getData();
       });
   } else if (btn === tableButtons.value[0]) {
+    if (tempData.value.name === '' || tempData.value.age === '') return;
     let patchData = {
       id: data.id,
       name: tempData.value.name,
