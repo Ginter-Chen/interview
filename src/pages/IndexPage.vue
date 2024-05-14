@@ -149,6 +149,21 @@ function handleClickOption(btn, data) {
         console.log(response.data);
         getData();
       });
+  } else if (btn === tableButtons.value[0]) {
+    let patchData = {
+      id: data.id,
+      name: tempData.value.name,
+      age: parseInt(tempData.value.age),
+    };
+    axios
+      .patch('https://dahua.metcfire.com.tw/api/CRUDTest', patchData)
+      .then((response) => {
+        console.log(response.data);
+        getData();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
 </script>
