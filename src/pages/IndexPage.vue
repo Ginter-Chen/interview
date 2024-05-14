@@ -136,10 +136,20 @@ const add = () => {
     .post('https://dahua.metcfire.com.tw/api/CRUDTest', tempData.value)
     .then((response) => {
       console.log(response);
+      getData();
     });
 };
 function handleClickOption(btn, data) {
   // ...
+  console.log(btn, data);
+  if (btn === tableButtons.value[1]) {
+    axios
+      .delete(`https://dahua.metcfire.com.tw/api/CRUDTest/${data.id}`)
+      .then((response) => {
+        console.log(response.data);
+        getData();
+      });
+  }
 }
 </script>
 
