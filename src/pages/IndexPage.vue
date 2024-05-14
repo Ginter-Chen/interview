@@ -4,7 +4,7 @@
       <div class="q-mb-xl">
         <q-input v-model="tempData.name" label="姓名" />
         <q-input v-model="tempData.age" label="年齡" />
-        <q-btn color="primary" class="q-mt-md">新增</q-btn>
+        <q-btn color="primary" class="q-mt-md" @click="add">新增</q-btn>
       </div>
 
       <q-table
@@ -80,7 +80,7 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { QTableProps } from 'quasar';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 interface btnType {
   label: string;
   icon: string;
@@ -123,6 +123,21 @@ const tempData = ref({
   name: '',
   age: '',
 });
+onMounted(() => {
+  getData();
+});
+const getData = () => {
+  axios.get('https://dahua.metcfire.com.tw/api/CRUDTest/a').then((response) => {
+    blockData.value = response.data;
+  });
+};
+const add = () => {
+  axios
+    .post('https://dahua.metcfire.com.tw/api/CRUDTest', tempData.value)
+    .then((response) => {
+      console.log(response);
+    });
+};
 function handleClickOption(btn, data) {
   // ...
 }
