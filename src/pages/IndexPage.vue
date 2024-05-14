@@ -75,6 +75,26 @@
           </div>
         </template>
       </q-table>
+      <div
+        v-if="tempDataDeleteId !== ''"
+        style="
+          padding-left: 30px;
+          padding-right: 30px;
+          position: absolute;
+          background-color: white;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          border: 1px solid #000;
+        "
+      >
+        <div style="font-size: 36px">提示</div>
+        <div style="font-size: 25px">是否確定刪除資料</div>
+        <div style="display: flex; justify-content: right; width: 300px">
+          <button style="margin-right: 20px" @click="cancel">取消</button>
+          <button @click="confirm">確定</button>
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
@@ -121,6 +141,7 @@ const tableButtons = ref([
   },
 ]);
 
+const tempDataDeleteId = ref('');
 const tempDataId = ref('');
 const tempData = ref({
   name: '',
@@ -170,33 +191,27 @@ const returnButtonName = () => {
     return '更新';
   }
 };
+const cancel = () => {
+  tempDataDeleteId.value = '';
+};
+const confirm = () => {
+  axios
+    .delete(
+      `https://dahua.metcfire.com.tw/api/CRUDTest/${tempDataDeleteId.value}`
+    )
+    .then((response) => {
+      console.log(response.data);
+      tempDataDeleteId.value = '';
+      getData();
+    });
+};
 function handleClickOption(btn, data) {
   if (btn === tableButtons.value[1]) {
-    axios
-      .delete(`https://dahua.metcfire.com.tw/api/CRUDTest/${data.id}`)
-      .then((response) => {
-        console.log(response.data);
-        getData();
-      });
+    tempDataDeleteId.value = data.id;
   } else if (btn === tableButtons.value[0]) {
     tempDataId.value = data.id;
     tempData.value.name = data.name;
     tempData.value.age = data.age;
-    // if (tempData.value.name === '' || tempData.value.age === '') return;
-    // let patchData = {
-    //   id: data.id,
-    //   name: tempData.value.name,
-    //   age: parseInt(tempData.value.age),
-    // };
-    // axios
-    //   .patch('https://dahua.metcfire.com.tw/api/CRUDTest', patchData)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     getData();
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
   }
 }
 </script>
