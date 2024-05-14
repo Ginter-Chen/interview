@@ -155,6 +155,11 @@ const getData = () => {
     blockData.value = response.data;
   });
 };
+const resetTempData = () => {
+  tempDataId.value = '';
+  tempData.value.name = '';
+  tempData.value.age = '';
+};
 const add = () => {
   if (tempData.value.name === '' || tempData.value.age === '') return;
   if (tempDataId.value === '') {
@@ -162,9 +167,7 @@ const add = () => {
       .post('https://dahua.metcfire.com.tw/api/CRUDTest', tempData.value)
       .then((response) => {
         console.log(response);
-        tempDataId.value = '';
-        tempData.value.name = '';
-        tempData.value.age = '';
+        resetTempData();
         getData();
       });
   } else {
@@ -177,9 +180,7 @@ const add = () => {
       .patch('https://dahua.metcfire.com.tw/api/CRUDTest', patchData)
       .then((response) => {
         console.log(response.data);
-        tempDataId.value = '';
-        tempData.value.name = '';
-        tempData.value.age = '';
+        resetTempData();
         getData();
       });
   }
